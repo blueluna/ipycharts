@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.codeText = new System.Windows.Forms.RichTextBox();
             this.splitter = new System.Windows.Forms.SplitContainer();
             this.vSplitter = new System.Windows.Forms.SplitContainer();
-            this.codeOutput = new System.Windows.Forms.RichTextBox();
-            this.goBtn = new System.Windows.Forms.Button();
-            this.plotTimer = new System.Windows.Forms.Timer(this.components);
+            this.codeText = new ScintillaNET.Scintilla();
             this.elapsedLabel = new System.Windows.Forms.Label();
+            this.goBtn = new System.Windows.Forms.Button();
+            this.codeOutput = new System.Windows.Forms.RichTextBox();
+            this.plotTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
             this.splitter.Panel1.SuspendLayout();
@@ -49,62 +49,51 @@
             this.vSplitter.Panel1.SuspendLayout();
             this.vSplitter.Panel2.SuspendLayout();
             this.vSplitter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.codeText)).BeginInit();
             this.SuspendLayout();
             // 
             // chart
             // 
             this.chart.BackColor = System.Drawing.SystemColors.Control;
-            chartArea4.AxisX.IsLabelAutoFit = false;
-            chartArea4.AxisX.LabelStyle.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea4.AxisX.LabelStyle.ForeColor = System.Drawing.Color.DarkGray;
-            chartArea4.AxisX.LabelStyle.Format = "F3";
-            chartArea4.AxisX.LineColor = System.Drawing.Color.Gainsboro;
-            chartArea4.AxisX.MajorGrid.LineColor = System.Drawing.Color.Gainsboro;
-            chartArea4.AxisX.MajorTickMark.LineColor = System.Drawing.Color.DarkGray;
-            chartArea4.AxisY.IsLabelAutoFit = false;
-            chartArea4.AxisY.LabelStyle.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea4.AxisY.LabelStyle.ForeColor = System.Drawing.Color.DarkGray;
-            chartArea4.AxisY.LineColor = System.Drawing.Color.Gainsboro;
-            chartArea4.AxisY.MajorGrid.LineColor = System.Drawing.Color.Gainsboro;
-            chartArea4.AxisY.MajorTickMark.LineColor = System.Drawing.Color.DarkGray;
-            chartArea4.BackColor = System.Drawing.SystemColors.Control;
-            chartArea4.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.TopBottom;
-            chartArea4.BackSecondaryColor = System.Drawing.Color.WhiteSmoke;
-            chartArea4.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea4);
+            chartArea1.AxisX.IsLabelAutoFit = false;
+            chartArea1.AxisX.LabelStyle.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea1.AxisX.LabelStyle.ForeColor = System.Drawing.Color.DarkGray;
+            chartArea1.AxisX.LabelStyle.Format = "F3";
+            chartArea1.AxisX.LineColor = System.Drawing.Color.Gainsboro;
+            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.Gainsboro;
+            chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.DarkGray;
+            chartArea1.AxisY.IsLabelAutoFit = false;
+            chartArea1.AxisY.LabelStyle.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea1.AxisY.LabelStyle.ForeColor = System.Drawing.Color.DarkGray;
+            chartArea1.AxisY.LineColor = System.Drawing.Color.Gainsboro;
+            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.Gainsboro;
+            chartArea1.AxisY.MajorTickMark.LineColor = System.Drawing.Color.DarkGray;
+            chartArea1.BackColor = System.Drawing.SystemColors.Control;
+            chartArea1.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.TopBottom;
+            chartArea1.BackSecondaryColor = System.Drawing.Color.WhiteSmoke;
+            chartArea1.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea1);
             this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend4.Enabled = false;
-            legend4.Name = "Legend1";
-            this.chart.Legends.Add(legend4);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(0, 0);
             this.chart.Margin = new System.Windows.Forms.Padding(0);
             this.chart.Name = "chart";
-            series4.BorderWidth = 2;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series4.Color = System.Drawing.Color.SkyBlue;
-            series4.Legend = "Legend1";
-            series4.Name = "series1";
-            series4.ShadowColor = System.Drawing.Color.White;
-            series4.ShadowOffset = 1;
-            series4.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            series4.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            this.chart.Series.Add(series4);
+            series1.BorderWidth = 2;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series1.Color = System.Drawing.Color.SkyBlue;
+            series1.Legend = "Legend1";
+            series1.Name = "series1";
+            series1.ShadowColor = System.Drawing.Color.White;
+            series1.ShadowOffset = 1;
+            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            this.chart.Series.Add(series1);
             this.chart.Size = new System.Drawing.Size(441, 354);
             this.chart.TabIndex = 0;
             this.chart.Text = "Chart";
-            // 
-            // codeText
-            // 
-            this.codeText.AcceptsTab = true;
-            this.codeText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codeText.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.codeText.Location = new System.Drawing.Point(0, 0);
-            this.codeText.Name = "codeText";
-            this.codeText.Size = new System.Drawing.Size(260, 237);
-            this.codeText.TabIndex = 1;
-            this.codeText.Text = "from System import Math\n\nfor n in xrange(len(x)):\n\ty[n] = Math.Sin(x[n]*Math.PI)\n" +
-    "series.Points.DataBindXY(x, y)";
             // 
             // splitter
             // 
@@ -116,9 +105,7 @@
             // 
             // splitter.Panel1
             // 
-            this.splitter.Panel1.Controls.Add(this.elapsedLabel);
             this.splitter.Panel1.Controls.Add(this.vSplitter);
-            this.splitter.Panel1.Controls.Add(this.goBtn);
             // 
             // splitter.Panel2
             // 
@@ -139,27 +126,64 @@
             // vSplitter.Panel1
             // 
             this.vSplitter.Panel1.Controls.Add(this.codeText);
+            this.vSplitter.Panel1.Controls.Add(this.elapsedLabel);
+            this.vSplitter.Panel1.Controls.Add(this.goBtn);
             // 
             // vSplitter.Panel2
             // 
             this.vSplitter.Panel2.Controls.Add(this.codeOutput);
-            this.vSplitter.Size = new System.Drawing.Size(260, 319);
-            this.vSplitter.SplitterDistance = 237;
+            this.vSplitter.Size = new System.Drawing.Size(260, 348);
+            this.vSplitter.SplitterDistance = 258;
             this.vSplitter.TabIndex = 3;
             // 
-            // codeOutput
+            // codeText
             // 
-            this.codeOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codeOutput.Location = new System.Drawing.Point(0, 0);
-            this.codeOutput.Name = "codeOutput";
-            this.codeOutput.Size = new System.Drawing.Size(260, 78);
-            this.codeOutput.TabIndex = 0;
-            this.codeOutput.Text = "";
+            this.codeText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.codeText.ConfigurationManager.CustomLocation = "ScintillaNET.xml";
+            this.codeText.ConfigurationManager.LoadOrder = ScintillaNET.Configuration.ConfigurationLoadOrder.BuiltInUserCustom;
+            this.codeText.Folding.IsEnabled = false;
+            this.codeText.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.codeText.Indentation.IndentWidth = 4;
+            this.codeText.Indentation.ShowGuides = true;
+            this.codeText.Indentation.TabWidth = 4;
+            this.codeText.Lexing.Lexer = ScintillaNET.Lexer.Python;
+            this.codeText.Lexing.LexerName = "python";
+            this.codeText.Lexing.LineCommentPrefix = "";
+            this.codeText.Lexing.StreamCommentPrefix = "";
+            this.codeText.Lexing.StreamCommentSufix = "";
+            this.codeText.Location = new System.Drawing.Point(3, 3);
+            this.codeText.Name = "codeText";
+            this.codeText.Size = new System.Drawing.Size(254, 223);
+            this.codeText.Styles.BraceBad.Size = 9F;
+            this.codeText.Styles.BraceLight.Size = 9F;
+            this.codeText.Styles.ControlChar.Size = 9F;
+            this.codeText.Styles.Default.BackColor = System.Drawing.SystemColors.Window;
+            this.codeText.Styles.Default.CharacterSet = ScintillaNET.CharacterSet.Ansi;
+            this.codeText.Styles.Default.FontName = "Consolas";
+            this.codeText.Styles.Default.Size = 9F;
+            this.codeText.Styles.IndentGuide.Size = 9F;
+            this.codeText.Styles.LastPredefined.Size = 9F;
+            this.codeText.Styles.LineNumber.Size = 9F;
+            this.codeText.Styles.Max.Size = 9F;
+            this.codeText.TabIndex = 5;
+            this.codeText.Whitespace.ForeColor = System.Drawing.Color.Gainsboro;
+            this.codeText.Whitespace.Mode = ScintillaNET.WhitespaceMode.VisibleAlways;
+            // 
+            // elapsedLabel
+            // 
+            this.elapsedLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.elapsedLabel.Location = new System.Drawing.Point(0, 237);
+            this.elapsedLabel.Name = "elapsedLabel";
+            this.elapsedLabel.Size = new System.Drawing.Size(176, 18);
+            this.elapsedLabel.TabIndex = 4;
             // 
             // goBtn
             // 
             this.goBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.goBtn.Location = new System.Drawing.Point(188, 328);
+            this.goBtn.Location = new System.Drawing.Point(182, 232);
             this.goBtn.Name = "goBtn";
             this.goBtn.Size = new System.Drawing.Size(75, 23);
             this.goBtn.TabIndex = 2;
@@ -167,18 +191,20 @@
             this.goBtn.UseVisualStyleBackColor = true;
             this.goBtn.Click += new System.EventHandler(this.goBtn_Click);
             // 
+            // codeOutput
+            // 
+            this.codeOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.codeOutput.Location = new System.Drawing.Point(0, 0);
+            this.codeOutput.Name = "codeOutput";
+            this.codeOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
+            this.codeOutput.Size = new System.Drawing.Size(260, 86);
+            this.codeOutput.TabIndex = 0;
+            this.codeOutput.Text = "";
+            this.codeOutput.WordWrap = false;
+            // 
             // plotTimer
             // 
             this.plotTimer.Tick += new System.EventHandler(this.plotTimer_Tick);
-            // 
-            // elapsedLabel
-            // 
-            this.elapsedLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.elapsedLabel.Location = new System.Drawing.Point(3, 333);
-            this.elapsedLabel.Name = "elapsedLabel";
-            this.elapsedLabel.Size = new System.Drawing.Size(179, 18);
-            this.elapsedLabel.TabIndex = 4;
             // 
             // MainForm
             // 
@@ -188,6 +214,7 @@
             this.Controls.Add(this.splitter);
             this.Name = "MainForm";
             this.Text = "PyChart";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.splitter.Panel1.ResumeLayout(false);
             this.splitter.Panel2.ResumeLayout(false);
@@ -197,6 +224,7 @@
             this.vSplitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.vSplitter)).EndInit();
             this.vSplitter.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.codeText)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -204,13 +232,13 @@
         #endregion
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chart;
-        private System.Windows.Forms.RichTextBox codeText;
         private System.Windows.Forms.SplitContainer splitter;
         private System.Windows.Forms.Button goBtn;
         private System.Windows.Forms.SplitContainer vSplitter;
         private System.Windows.Forms.RichTextBox codeOutput;
         private System.Windows.Forms.Timer plotTimer;
         private System.Windows.Forms.Label elapsedLabel;
+        private ScintillaNET.Scintilla codeText;
     }
 }
 

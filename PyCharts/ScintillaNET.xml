@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ScintillaNET>
+  <Language Name="default">
+    <Styles>
+      <Style Name="Default" FontName="Consolas"/>
+    </Styles>
+  </Language>
+  <Language Name="python">
+    <Styles>
+      <Style Name="DEFAULT" ForeColor="Black"/>
+      <Style Name="COMMENTLINE" ForeColor="#999999"/>
+      <Style Name="NUMBER" ForeColor="Orange"/>
+      <Style Name="STRING" ForeColor="#006600"/>
+      <Style Name="CHARACTER" ForeColor="#009900"/>
+      <Style Name="KEYWORDS" ForeColor="#6666aa"/>
+      <Style Name="TRIPLE" ForeColor="#666666"/>
+      <Style Name="TRIPLEDOUBLE" ForeColor="#666666"/>
+      <Style Name="CLASSNAME" ForeColor="#990099"/>
+      <Style Name="DEFNAME" ForeColor="#aa33aa"/>
+      <Style Name="OPERATOR" ForeColor="#666666"/>
+      <Style Name="IDENTIFIER" ForeColor="Black"/>
+      <Style Name="COMMENTBLOCK" ForeColor="#999999"/>
+    </Styles>
+  </Language>
+</ScintillaNET>

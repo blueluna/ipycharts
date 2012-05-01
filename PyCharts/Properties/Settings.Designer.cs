@@ -8,22 +8,68 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PyCharts.Properties
-{
-
-
+namespace PyCharts.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("800, 600")]
+        public global::System.Drawing.Size WindowSize {
+            get {
+                return ((global::System.Drawing.Size)(this["WindowSize"]));
+            }
+            set {
+                this["WindowSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point WindowPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["WindowPosition"]));
+            }
+            set {
+                this["WindowPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("# t = time in seconds with 100ns resolution\r\n# xs = x values to plot\r\n# ys = y va" +
+            "lues to plot\r\n# chart = the chart\r\n\r\nfrom System import Math\r\n\r\nd = t\r\nfor n in " +
+            "xrange(len(xs)):\r\n\txs[n] = d\r\n\tys[n] = Math.Sin(d*Math.PI)\r\n\td += 0.01\r\n")]
+        public string Code {
+            get {
+                return ((string)(this["Code"]));
+            }
+            set {
+                this["Code"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public global::System.Windows.Forms.FormWindowState WindowState {
+            get {
+                return ((global::System.Windows.Forms.FormWindowState)(this["WindowState"]));
+            }
+            set {
+                this["WindowState"] = value;
             }
         }
     }

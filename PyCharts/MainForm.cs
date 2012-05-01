@@ -6,15 +6,19 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Configuration;
 using System.Diagnostics;
 using System.Windows.Forms;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
+using ScintillaNET;
 
 namespace PyCharts
 {
     public partial class MainForm : Form
     {
+        Properties.Settings settings;
+
         ScriptEngine scriptEngine;
         ScriptScope scriptScope;
         CompiledCode script = null;
@@ -25,10 +29,24 @@ namespace PyCharts
         double offset = 0.0;
         double[] xValues = null;
         double[] yValues = null;
+        long startTicks = 0;
+
+        object pythonClass = null;
+        Func<double, double[], double[], object> runner = null;
 
         public MainForm()
         {
+            settings = new Properties.Settings();
+            settings.Reload();
+
             InitializeComponent();
+            
+            Size = settings.WindowSize;
+            Location = settings.WindowPosition;
+            WindowState = settings.WindowState;
+
+            ConfigureCodeEditor();
+            codeText.Text = settings.Code;
 
             scriptStream = new MemoryStream();
             MemoryStream ms = new MemoryStream();
@@ -37,33 +55,29 @@ namespace PyCharts
 
             scriptEngine = Python.CreateEngine();
             scriptEngine.Runtime.IO.SetOutput(scriptStream, scriptWriter);
-            ScriptSource src = scriptEngine.CreateScriptSourceFromString("import clr\r\nclr.AddReference('System')\r\nfrom System import Math\r\n");
-            src.Execute();
             scriptScope = scriptEngine.CreateScope();
-            scriptScope.SetVariable("series", chart.Series["series1"]);
+            scriptScope.SetVariable("chart", chart);
 
-            xValues = new double[200];
-            yValues = new double[200];
-            scriptScope.SetVariable("x", xValues);
-            scriptScope.SetVariable("y", yValues);
+            xValues = new double[400];
+            yValues = new double[400];
 
-            plotTimer.Interval = 33;
+            compileScript();
+
+            plotTimer.Interval = 32;
             plotTimer.Start();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            settings.WindowSize = Size;
+            settings.WindowPosition = Location;
+            settings.WindowState = WindowState;
+            settings.Save();
         }
 
         private void goBtn_Click(object sender, EventArgs e)
         {
-            string code = codeText.Text;
-            ScriptSource scriptSource = scriptEngine.CreateScriptSourceFromString(code);
-            try
-            {
-                script = scriptSource.Compile();
-                offset = 0.0;
-            }
-            catch (Exception ex)
-            {
-                codeOutput.Text += ex.Message + "\r\n";
-            }
+            compileScript();
         }
 
         private void scriptOuput(object sender, ScriptOutputArgs args)
@@ -76,30 +90,85 @@ namespace PyCharts
             runScript();
         }
 
-        private void runScript()
+        private void compileScript()
         {
-            if (script == null) { return; }
-            double t = offset;
-            for (int n = 0; n < xValues.Length; n++)
-            {
-                xValues[n] = t;
-                yValues[n] = Math.Sin(t);
-                t += 0.01;
-            }
-
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            string code = codeText.Text;
+            ScriptSource scriptSource = scriptEngine.CreateScriptSourceFromString(code);
             try
             {
-                script.Execute(scriptScope);
+                script = scriptSource.Compile();
+                offset = 0.0;
+                startTicks = DateTime.UtcNow.Ticks;
+                settings.Code = code;
             }
             catch (Exception ex)
             {
                 codeOutput.Text += ex.Message + "\r\n";
             }
+            Func<object> factory = null;
+            try
+            {
+                script.Execute(scriptScope);
+                if (!scriptScope.TryGetVariable("Factory", out factory))
+                {
+                    factory = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                codeOutput.Text += ex.Message + "\r\n";
+            }
+            if (factory != null)
+            {
+                pythonClass = factory();
+                try
+                {
+                    runner = scriptEngine.Operations.GetMember(pythonClass, "run");
+                }
+                catch (MissingMemberException) {
+                    runner = null;
+                }
+            }
+            if (runner != null) {
+                try
+                {
+                    runner(offset, xValues, yValues);
+                    settings.Code = code;
+                }
+                catch (Exception ex)
+                {
+                    codeOutput.Text += ex.Message + "\r\n";
+                    runner = null;
+                }
+            }
+        }
+
+        private void runScript()
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            if (runner != null)
+            {
+                offset = (DateTime.UtcNow.Ticks - startTicks) / 10000000.0;
+                try
+                {
+                    runner(offset, xValues, yValues);
+                }
+                catch (Exception ex)
+                {
+                    codeOutput.Text += ex.Message + "\r\n";
+                    runner = null;
+                }
+            }
             stopwatch.Stop();
-            double secs = stopwatch.ElapsedMilliseconds / 1000.0;
-            elapsedLabel.Text = String.Format("{0:f9}", secs);
-            offset += 0.1;
+            double secs = (1000.0 * stopwatch.ElapsedTicks) / (double)(Stopwatch.Frequency);
+            elapsedLabel.Text = String.Format("{0:f3}ms", secs);
+            chart.Series["series1"].Points.DataBindXY(xValues, yValues);
+        }
+
+        private void ConfigureCodeEditor()
+        {
+            codeText.ConfigurationManager.Language = "python";
+            codeText.ConfigurationManager.Configure();
         }
     }
 

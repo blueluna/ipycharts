@@ -19,7 +19,7 @@ namespace PyCharts
     {
         Properties.Settings settings;
 
-        ScriptEngine scriptEngine;
+        ScriptEngine scriptEngine = null;
         ScriptScope scriptScope;
         CompiledCode script = null;
 
@@ -31,8 +31,8 @@ namespace PyCharts
         double[] yValues = null;
         long startTicks = 0;
 
-        object pythonClass = null;
-        Func<double, double[], double[], object> runner = null;
+        object scriptClass = null;
+        Func<double, double[], double[], object> scriptCalculate = null;
 
         public MainForm()
         {
@@ -48,23 +48,9 @@ namespace PyCharts
             ConfigureCodeEditor();
             codeText.Text = settings.Code;
 
-            scriptStream = new MemoryStream();
-            MemoryStream ms = new MemoryStream();
-            scriptWriter = new ScriptStreamWriter(scriptStream);
-            scriptWriter.StringWritten += scriptOuput;
-
-            scriptEngine = Python.CreateEngine();
-            scriptEngine.Runtime.IO.SetOutput(scriptStream, scriptWriter);
-            scriptScope = scriptEngine.CreateScope();
-            scriptScope.SetVariable("chart", chart);
-
-            xValues = new double[400];
-            yValues = new double[400];
+            plotTimer.Interval = 33;
 
             compileScript();
-
-            plotTimer.Interval = 32;
-            plotTimer.Start();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -75,14 +61,14 @@ namespace PyCharts
             settings.Save();
         }
 
-        private void goBtn_Click(object sender, EventArgs e)
+        private void doCompileScript(object sender, EventArgs e)
         {
             compileScript();
         }
 
         private void scriptOuput(object sender, ScriptOutputArgs args)
         {
-            codeOutput.Text += args.Value;
+            outputText.Text += args.Value;
         }
 
         private void plotTimer_Tick(object sender, EventArgs e)
@@ -90,8 +76,51 @@ namespace PyCharts
             runScript();
         }
 
+        private void initializeEngine()
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            scriptStream = new MemoryStream();
+            MemoryStream ms = new MemoryStream();
+            scriptWriter = new ScriptStreamWriter(scriptStream);
+            scriptWriter.StringWritten += scriptOuput;
+
+            scriptEngine = Python.CreateEngine();
+            scriptEngine.Runtime.IO.SetOutput(scriptStream, scriptWriter);
+            scriptScope = scriptEngine.CreateScope();
+            scriptScope.SetVariable("chart", chart);
+
+            double secs = (1000.0 * stopwatch.ElapsedTicks) / (double)(Stopwatch.Frequency);
+            buildInfo(String.Format("Initialize engine took {0:f3}ms", secs));
+        }
+
+        private void buildClear()
+        {
+            buildText.Text = "";
+        }
+
+        private void buildError(string message)
+        {
+            buildText.Text += "ERROR:\t" + message + "\r\n";
+        }
+
+        private void buildWarning(string message)
+        {
+            buildText.Text += "WARNING:\t" + message + "\r\n";
+        }
+
+        private void buildInfo(string message)
+        {
+            buildText.Text += "INFO:\t" + message + "\r\n";
+        }
+
         private void compileScript()
         {
+            buildClear();
+            outputClear();
+            if (scriptEngine == null) {
+                initializeEngine();
+            }
+            Stopwatch stopwatch = Stopwatch.StartNew();
             string code = codeText.Text;
             ScriptSource scriptSource = scriptEngine.CreateScriptSourceFromString(code);
             try
@@ -103,7 +132,7 @@ namespace PyCharts
             }
             catch (Exception ex)
             {
-                codeOutput.Text += ex.Message + "\r\n";
+                buildError(ex.Message);
             }
             Func<object> factory = null;
             try
@@ -116,52 +145,95 @@ namespace PyCharts
             }
             catch (Exception ex)
             {
-                codeOutput.Text += ex.Message + "\r\n";
+                buildError(ex.Message);
             }
             if (factory != null)
             {
-                pythonClass = factory();
                 try
                 {
-                    runner = scriptEngine.Operations.GetMember(pythonClass, "run");
-                }
-                catch (MissingMemberException) {
-                    runner = null;
-                }
-            }
-            if (runner != null) {
-                try
-                {
-                    runner(offset, xValues, yValues);
-                    settings.Code = code;
+                    scriptClass = factory();
                 }
                 catch (Exception ex)
                 {
-                    codeOutput.Text += ex.Message + "\r\n";
-                    runner = null;
+                    buildError(ex.Message);
+                    scriptClass = null;
                 }
             }
+            if (scriptClass != null)
+            {
+                try
+                {
+                    Func<UInt32> sampleCount = scriptEngine.Operations.GetMember(scriptClass, "sampleCount");
+                    UInt32 samples = sampleCount();
+                    xValues = new double[samples];
+                    yValues = new double[samples];
+                }
+                catch (MissingMemberException)
+                {
+                    if (xValues == null || yValues == null)
+                    {
+                        xValues = new double[200];
+                        yValues = new double[200];
+                    }
+                }
+                try
+                {
+                    scriptCalculate = scriptEngine.Operations.GetMember(scriptClass, "calculate");
+                }
+                catch (MissingMemberException)
+                {
+                    scriptCalculate = null;
+                }
+            }
+            if (scriptCalculate != null)
+            {
+                try
+                {
+                    scriptCalculate(offset, xValues, yValues);
+                    settings.Code = code;
+                    plotTimer.Start();
+                }
+                catch (Exception ex)
+                {
+                    buildError(ex.Message);
+                    scriptCalculate = null;
+                }
+            }
+            stopwatch.Stop();
+            double secs = (1000.0 * stopwatch.ElapsedTicks) / (double)(Stopwatch.Frequency);
+            buildInfo(String.Format("Compiled in {0:f3}ms", secs));
+        }
+
+        private void outputClear()
+        {
+            outputText.Text = "";
+        }
+
+        private void outputError(string message)
+        {
+            outputText.Text += "ERROR:\t" + message + "\r\n";
         }
 
         private void runScript()
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
-            if (runner != null)
+            if (scriptCalculate != null)
             {
                 offset = (DateTime.UtcNow.Ticks - startTicks) / 10000000.0;
                 try
                 {
-                    runner(offset, xValues, yValues);
+                    scriptCalculate(offset, xValues, yValues);
                 }
                 catch (Exception ex)
                 {
-                    codeOutput.Text += ex.Message + "\r\n";
-                    runner = null;
+                    outputError(ex.Message);
+                    scriptCalculate = null;
                 }
             }
             stopwatch.Stop();
             double secs = (1000.0 * stopwatch.ElapsedTicks) / (double)(Stopwatch.Frequency);
-            elapsedLabel.Text = String.Format("{0:f3}ms", secs);
+            exeTimeLabel.Text = String.Format("{0:f3}ms", secs);
+
             chart.Series["series1"].Points.DataBindXY(xValues, yValues);
         }
 
@@ -169,6 +241,11 @@ namespace PyCharts
         {
             codeText.ConfigurationManager.Language = "python";
             codeText.ConfigurationManager.Configure();
+        }
+
+        private void exitFileMenu_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 

@@ -9,7 +9,7 @@
     <Styles>
       <Style Name="DEFAULT" ForeColor="Black"/>
       <Style Name="COMMENTLINE" ForeColor="#999999"/>
-      <Style Name="NUMBER" ForeColor="Orange"/>
+      <Style Name="NUMBER" ForeColor="#996600"/>
       <Style Name="STRING" ForeColor="#006600"/>
       <Style Name="CHARACTER" ForeColor="#009900"/>
       <Style Name="KEYWORDS" ForeColor="#6666aa"/>
